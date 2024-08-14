@@ -60,7 +60,27 @@ select * from departments;
 select * from salaries;
 select * from dept_emp;
 
-select * from department as d 
-JOIN dept_emp as de
+select d.dept_no,d.dept_name,avg(s.salary) as Avarage_Salary from departments as d 
+JOIN dept_emp as de 
+ON de.dept_no = d.dept_no
+JOIN salaries as s ON de.emp_no=s.emp_no
+GROUP BY d.dept_no,d.dept_name;
 
+-- 9.Gender Distribution in Each Department
+-- Question: Write a query to find the gender distribution (number of males and females) in each department. Include department number, department name, count of males, and count of females.
+select d.dept_no,d.dept_name,
+sum(CASE WHEN e.gender='M' THEN 1 ELSE 0 END) as male_count,
+sum(CASE WHEN e.gender='F' THEN 1 ELSE 0 END) as female_count
+ from departments as d
+JOIN dept_emp as de ON de.dept_no=d.dept_no
+JOIN employees as e ON e.emp_no=de.emp_no
+GROUP BY d.dept_no,d.dept_name;
 
+-- 10. Longest Serving Employees
+-- Question: Write a query to find the employees who have served the longest in the company. Include employee number, first name, last name, and number of years served.
+select * from employees;
+select e.emp_no,e.first_name,e.last_name,
+timestampdiff(YEAR,hire_date,CUrdate()) as year_served
+from employees as e
+ORDER BY year_served DESC
+limit 10;
